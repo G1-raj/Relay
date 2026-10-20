@@ -2,25 +2,32 @@ import { Request, Response } from "express";
 import { prisma } from "../../../lib/prisma.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import z from "zod";
 
 interface RefreshTokenPayload {
     id: string,
     email: string
 }
 
+const refreshTokenSchema = z.object({
+    refreshToken: z.string()
+});
+
 const refreshAccessToken = async (req: Request, res: Response) => {
     try {
 
         //getting refresh token from the cookie
-        const refreshToken = req.cookies.refreshToken;
+        const result = refreshTokenSchema.safeParse(req.cookies.refreshToken);
 
         //validating if refresh token exist or not
-        if(!refreshToken) {
-            return res.status(401).json({
+        if(!result.success) {
+            return res.status(400).json({
                 success: false,
-                message: "Refresh token is missing"
+                message: "Validation failed"
             });
         }
+
+        const { refreshToken } = result.data;
 
          //jwt secrets
         const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
