@@ -5,16 +5,19 @@ import logout from "../controllers/auth/logout/logout.controller.js";
 import sendOtp from "../controllers/auth/forgotPassword/sendOtp.controller.js";
 import verifyOtp from "../controllers/auth/forgotPassword/verifyOtp.controller.js";
 import changePassword from "../controllers/auth/forgotPassword/changePassword.controller.js";
+import { authLimiter, loginLimiter, logoutLimiter, sendOtpLimiter, verifyOtpLimiter } from "../middlewares/rateLimit.middleware.js";
+import refreshAccessToken from "../controllers/auth/refresh/refresh.controller.js";
 
 const router = Router();
 
-router.post("/signup", signUp);
-router.post("/login", login);
-router.post("/logout", logout);
+router.post("/signup", authLimiter, signUp);
+router.post("/login", loginLimiter, login);
+router.post("/refresh", authLimiter, refreshAccessToken);
+router.post("/logout", logoutLimiter, logout);
 
 //forget password routes
-router.post("/forgot-password/sendotp", sendOtp);
-router.post("/forgot-password/verify-otp", verifyOtp);
-router.put("/forgot-password/changepassword", changePassword);
+router.post("/forgot-password/sendotp", sendOtpLimiter, sendOtp);
+router.post("/forgot-password/verify-otp", verifyOtpLimiter, verifyOtp);
+router.put("/forgot-password/changepassword", authLimiter, changePassword);
 
 export default router;
