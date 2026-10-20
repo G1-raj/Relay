@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken"
 
 
 const userSchema = z.object({
-    email: z.string().email(),
+    email: z.email(),
     password: z.string().length(8, "Password must be at least 8 characters")
 });
 

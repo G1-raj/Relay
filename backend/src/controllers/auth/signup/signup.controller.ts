@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 
 const userSchema = z.object({
     fullName: z.string(),
-    email: z.string().email(),
+    email: z.email(),
     password: z.string().length(8, "Password must be at least 8 characters")
 });
 
