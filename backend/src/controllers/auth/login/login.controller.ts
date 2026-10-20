@@ -80,7 +80,7 @@ const login = async (req: Request, res: Response) => {
         });
 
         //sending and saving the refreshtoken in cookie
-        req.cookies("refreshToken", refreshToken, {
+        res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
@@ -100,7 +100,7 @@ const login = async (req: Request, res: Response) => {
         //success response
         return res.status(200).json({
             success: true,
-            data: user,
+            data: userCredentials,
             message: "User login successful"
         });
     } catch (error) {
